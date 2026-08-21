@@ -32,6 +32,7 @@ class BrowserFactory:
             launcher_class = cls._launchers[config.browser]
         except KeyError as ex:
             raise BrowserNotRegisteredError(f"No launcher registered for '{config.browser}'. 'Register a launcher before calling BrowserFactory.create().'") from ex
+        return launcher_class().launch(playwright, config)
 
     @classmethod
     def register_launcher(cls, browser_type: BrowserType, launcher_class: type) -> None:
