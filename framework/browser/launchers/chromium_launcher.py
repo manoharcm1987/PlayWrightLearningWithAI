@@ -7,6 +7,7 @@ from framework.browser.launchers.browser_launcher import BrowserLancher
 
 
 class ChromiumLauncher(BrowserLancher):
+    """Launch a Chromium browser instance."""
 
-    def launch(self, playwright: Playwright, browser_config: BrowserConfig) -> Browser:
-        return playwright.chromium.launch(headless=browser_config.headless, slow_mo=browser_config.slow_mo )
+    def launch(self, playwright: Playwright, config: BrowserConfig) -> Browser:
+        return playwright.chromium.launch(headless=config.headless, slow_mo=config.slow_mo )

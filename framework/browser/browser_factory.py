@@ -1,4 +1,6 @@
 
+from playwright.sync_api import Playwright
+from framework.browser.browser_config import BrowserConfig
 from framework.browser.launchers.chromium_launcher import ChromiumLauncher
 from framework.browser.launchers.firefox_launcher import FirefoxLauncher
 from framework.browser.launchers.web_kit_launcher import WebKitLauncher
@@ -16,16 +18,20 @@ class BrowserFactory:
     }
 
     @classmethod
-    def create(cls,playwright: BrowserType, browser_config):
+    def create(cls, playwright: Playwright, config: BrowserConfig):
         """
             Creates a Playwright browser using the registered launcher.
             Args:
                 playwright (Playwright): The Playwright instance.
-                browser_config (BrowserConfig): The configuration for the browser."""
-        launcher_class = cls._launchers.get(browser_config.browser)
-        if not launcher_class:
-            raise BrowserNotRegisteredError(f"No launcher registered for browser type: {browser_config.browser}")
-        return launcher_class().launch(playwright, browser_config)
+                config (BrowserConfig): The configuration for the browser."""
+        # launcher_class = cls._launchers.get(config.browser)
+        # if not launcher_class:
+        #     raise BrowserNotRegisteredError(f"No launcher registered for browser type: {config.browser}")
+        # return launcher_class().launch(playwright, config)
+        try:
+            launcher_class = cls._launchers[config.browser]
+        except KeyError as ex:
+            raise BrowserNotRegisteredError(f"No launcher registered for '{config.browser}'. 'Register a launcher before calling BrowserFactory.create().'") from ex
 
     @classmethod
     def register_launcher(cls, browser_type: BrowserType, launcher_class: type) -> None:
